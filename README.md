@@ -23,18 +23,30 @@
    - Update `dev.env` and `test.env` with appropriate values for your development and testing environments.
 
 
+## run migrations
+To run the development server, execute:
+```
+source dev.env
+poetry run flask db init
+poetry run flask db migrate -m "initial migrations"
+
+```
+This will start the Flask development server with the configuration specified in `dev.env`.
+
 
 ## Running the Project
 To run the development server, execute:
 ```
-export ENVIRONMENT=development && poetry run python run.py
+source dev.env
+poetry run python run.py
 ```
 This will start the Flask development server with the configuration specified in `dev.env`.
 
 ## Running Tests
 For running tests, use:
 ```
-export ENVIRONMENT=test && poetry run pytest tests/
+source test.env
+poetry run pytest tests/
 ```
 This command will run the test suite using the configuration specified in `test.env`.
 

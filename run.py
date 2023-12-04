@@ -17,22 +17,19 @@ def create_app():
     """
 
     app = Flask(__name__)
-    print(config.DATABASE_URI)
     app.config["SQLALCHEMY_DATABASE_URI"] = config.DATABASE_URI
     app.config["SECRET_KEY"] = config.SECRET_KEY
     db.init_app(app)
     jwt.init_app(app)
+    Migrate(app, db, command="db")
     app.register_blueprint(app_router)
     return app
-
 
 
 app = create_app()
 
 
 CORS(app)
-
-migrate = Migrate(app, db)
 
 
 with app.app_context():
