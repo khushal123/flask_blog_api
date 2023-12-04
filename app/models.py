@@ -7,6 +7,16 @@ from typing import List
 db = SQLAlchemy()
 
 
+class CRUDMixin:
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    def update(self) -> None:
+        db.session.commit()
+
+
 class BaseMixin(db.Model):
     __abstract__ = True
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
@@ -16,7 +26,7 @@ class BaseMixin(db.Model):
     )
 
 
-class User(BaseMixin):
+class User(BaseMixin, CRUDMixin):
     __tablename__ = "users"
     email: Mapped[str] = mapped_column(unique=True, index=True)
     password: Mapped[str] = mapped_column(nullable=False)
@@ -26,11 +36,22 @@ class User(BaseMixin):
     posts: Mapped[List["Post"]] = relationship(
         back_populates="author"
     )  # lazy="select" is the default
-    comments: Mapped[List["Post"]] = relationship(back_populates="author")
+    comments: Mapped[List["Comment"]] = relationship(back_populates="author")
 
 
-class Post(BaseMixin):
+class Comment(BaseMixin, CRUDMixin):
+    __tablename__ = "comments"
+    content: Mapped[str] = mapped_column()
+    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
+    post: Mapped["Post"] = relationship("Post", back_populates="comments")
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    author: Mapped["User"] = relationship(back_populates="comments", lazy="joined")
+
+
+class Post(BaseMixin, CRUDMixin):
     __tablename__ = "posts"
+
+
     title: Mapped[str] = mapped_column()
     content: Mapped[str] = mapped_column()
     is_published: Mapped[bool] = mapped_column(default=True)
@@ -39,15 +60,4 @@ class Post(BaseMixin):
         back_populates="posts"
     )  # lazy='joined' could be used here
 
-    comments: Mapped[List["Comment"]] = relationship(back_populates="post")
-
-
-class Comment(BaseMixin):
-    __tablename__ = "comments"
-    content: Mapped[str] = mapped_column()
-    post_id: Mapped[int] = mapped_column(ForeignKey("posts.id"))
-    post: Mapped["Post"] = relationship(
-        "Post", back_populates="comments", lazy="joined"
-    )
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    author: Mapped["User"] = relationship(back_populates="comments", lazy="joined")
+    comments: Mapped[List["Comment"]] = relationship(back_populates="post", lazy="noload")

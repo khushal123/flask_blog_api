@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "flask-blog-api"
+name = "flask_blog_api"
 packages = [{ include = "app" }, { include = 'tests' }]
 version = "0.1.0"
 description = ""
@@ -11,8 +11,11 @@ python = "^3.11"
 flask = "^3.0.0"
 flask-sqlalchemy = "^3.1.1"
 pydantic = "^2.5.2"
-flask-jwt = "^0.3.2"
 passlib = "^1.7.4"
+flask-alembic = "^2.0.1"
+click = "^8.1.7"
+flask-jwt-extended = "^4.5.3"
+flask-cors = "^4.0.0"
 
 
 [build-system]
