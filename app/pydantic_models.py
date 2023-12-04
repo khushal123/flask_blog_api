@@ -1,11 +1,10 @@
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, field_validator, ConfigDict
 from datetime import datetime
 from typing import List
 
 
 class BaseSchemaMode(BaseModel):
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class BaseTimestampModel(BaseSchemaMode):
@@ -30,10 +29,6 @@ class UserSchema(BaseSchemaMode):
     email: str
     first_name: str
     last_name: str
-    password: str
-
-    class Config:
-        exclude = {"password"}
 
 
 class PostCreate(BaseSchemaMode):
@@ -69,8 +64,6 @@ class PostSchema(BaseTimestampModel):
     author_id: int
 
 
-
-
 class PostWithCommentSchema(PostSchema):
     comments: List[CommentSchema] = []
 
@@ -81,8 +74,9 @@ class QueryParams(BaseSchemaMode):
     sort: str = "created_at"
     order: str = "desc"
 
-    @validator("order")
+    @field_validator("order")
     def order_must_be_asc_or_desc(cls, v):
         if v not in ["asc", "desc"]:
             raise ValueError('Order must be "asc" or "desc"')
         return v
+

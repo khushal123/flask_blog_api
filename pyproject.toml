@@ -3,7 +3,7 @@ name = "flask_blog_api"
 packages = [{ include = "app" }, { include = 'tests' }]
 version = "0.1.0"
 description = ""
-authors = ["Khushal Chouhan khushalsingh12@gmail.com"]
+authors = ["Khushal Chouhan <khushalsingh12@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -12,12 +12,17 @@ flask = "^3.0.0"
 flask-sqlalchemy = "^3.1.1"
 pydantic = "^2.5.2"
 passlib = "^1.7.4"
-flask-alembic = "^2.0.1"
 click = "^8.1.7"
 flask-jwt-extended = "^4.5.3"
 flask-cors = "^4.0.0"
-
+pytest = "^7.4.3"
+faker = "^20.1.0"
+flask-migrate = "^4.0.5"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# [tool.poetry.scripts]
+# runserver = "export ENVIRONMENT=development poetry run python run.py"
+# runtests = "export ENVIRONMENT=test poetry run pytest tests/"
